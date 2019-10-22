@@ -1,3 +1,4 @@
+require('dotenv').config()
 
 export default {
   mode: 'spa',
@@ -33,6 +34,7 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxtjs/dotenv',
   ],
   /*
   ** Nuxt.js modules
