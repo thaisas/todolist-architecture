@@ -5,7 +5,7 @@ export const state = () => ({
 export const actions = {
     async addTodo({ commit }, description) {
         try {
-            let data  = await this.$axios.$post('http://localhost:3333/items',{ description: description })
+            let data  = await this.$axios.$post('/items',{ description: description })
             if(data){
                 commit("ADD_TODO", data)
             }
@@ -15,7 +15,7 @@ export const actions = {
      },
      async removeTodo({ commit }, todo) {
         try {
-          await this.$axios.$delete(`http://localhost:3333/items/${todo._id}`)
+          await this.$axios.$delete(`items/${todo._id}`)
           commit('REMOVE_TODO', todo)
         } catch (error) {
             console.log(`removeTodo -> ${error}`)
@@ -23,7 +23,7 @@ export const actions = {
     },
     async updateTodo({ commit }, { params, todo }) {
         try {
-          let data = await this.$axios.$patch(`http://localhost:3333/items/${todo._id}`, params)
+          let data = await this.$axios.$patch(`/items/${todo._id}`, params)
           if (data) commit('UPDATE_TODO', data)
         } catch (error) {
             console.log(`updateTodo -> ${error}`)
@@ -31,7 +31,7 @@ export const actions = {
     },
     async getTodos({ commit }) {
         try {
-          let data = await this.$axios.$get('http://localhost:3333/items')
+          let data = await this.$axios.$get('/items')
           console.log(data)
           if (data) commit('GET_TODOS', data)
         } catch (error) {
