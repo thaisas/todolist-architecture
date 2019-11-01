@@ -1,9 +1,9 @@
 <template>
   <ul>
     <li v-for="todo in todos" :key="todo.id">
-      <input type="checkbox" :checked="todo.done" @change="updateTodo(todo)">
-      <span :class="{ done: todo.done }">{{ todo.text }}</span> 
-      {{ todo }}
+      <input type="checkbox" :checked="todo.checked" @change="updateTodo(todo)">
+      <span :class="{ done: todo.checked }">{{ todo.description }}</span> 
+      <input type="button" @click="removeTodo(todo)" value="Remover">
     </li>
     <li><input placeholder="So what?" @keyup.enter="addTodo"></li>
   </ul>
@@ -19,17 +19,17 @@ export default {
     })
   },
   mounted(){
-    this.$store.dispatch('todos/getTodos')
+    this.$store.dispatch('todos/feachTodos')
   },
   methods: {
     addTodo (todo) {
-        this.$store.dispatch("todos/addTodo",todo.checked)
+        this.$store.dispatch("todos/addTodo", todo)
     },
-    removeTodo (e) {
-      this.$store.dispatch("todos/removeTodo",e.target.value)
+    removeTodo (todo) {
+      this.$store.dispatch("todos/removeTodo", todo)
     },
-    updateTodo (e) {
-      this.$store.dispatch("todos/updateTodo",e.target.value)
+    updateTodo (todo) {
+      this.$store.dispatch("todos/updateTodo", todo)
     }
   }
 }

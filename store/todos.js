@@ -3,40 +3,41 @@ export const state = () => ({
 })
 
 export const actions = {
-    async addTodo({ commit }, description) {
-        try {
-            let data  = await this.$axios.$post('/items',{ description: description })
-            if(data){
-                commit("ADD_TODO", data)
-            }
-        } catch (error) {
-            console.log(`addTodo -> ${error}`)
-        }
+    addTodo({ commit }, todo) {
+        let data = this.$axios.$post('/items',{ description: todo.description })
+        .then(
+            commit("ADD_TODO", data)
+        )
+        .catch(error => {
+            console.log(`Error at ADD_TODO - console error: ${error}`)
+        })
      },
-     async removeTodo({ commit }, todo) {
-        try {
-          await this.$axios.$delete(`items/${todo._id}`)
-          commit('REMOVE_TODO', todo)
-        } catch (error) {
-            console.log(`removeTodo -> ${error}`)
-        }
+     removeTodo({ commit }, todo) {
+        this.$axios.$delete(`items/${todo._id}`)
+        .then(response => {
+            commit('REMOVE_TODO', todo)
+        })
+        .catch(error => {
+            console.log(`Error at REMOVE_TODO - console error: ${error}`)
+        })
     },
-    async updateTodo({ commit }, { params, todo }) {
-        try {
-          let data = await this.$axios.$patch(`/items/${todo._id}`, params)
-          if (data) commit('UPDATE_TODO', data)
-        } catch (error) {
-            console.log(`updateTodo -> ${error}`)
-        }
+    updateTodo({ commit }, todo) {
+        this.$axios.$put(`/items/${todo._id}`, {description: todo.description, checked: !todo.checked})
+        .then(response => {
+            commit("UPDATE_TODO", response)
+        })
+        .catch(error => {
+            console.log(`Error at UPDATE_TODO - console error: ${error}`)
+        })
     },
-    async getTodos({ commit }) {
-        try {
-          let data = await this.$axios.$get('/items')
-          console.log(data)
-          if (data) commit('GET_TODOS', data)
-        } catch (error) {
-            console.log(`getTodos -> ${error}`)
-        }
+    feachTodos({ commit }) {
+        this.$axios.$get('/items')
+        .then(response => {
+            commit("GET_TODOS", response)
+        })
+        .catch(error => {
+            console.log(`Error at GET_TODOS - console error: ${error}`)
+        })
     }
 }
 
