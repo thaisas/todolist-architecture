@@ -5,7 +5,7 @@
       <span :class="{ done: todo.checked }">{{ todo.description }}</span> 
       <input type="button" @click="removeTodo(todo)" value="Remover">
     </li>
-    <li><input placeholder="So what?" @keyup.enter="addTodo"></li>
+    <li><input v-model="currentTodo" placeholder="So what?" @keyup.enter="addTodo"></li>
   </ul>
 </template>
 
@@ -13,17 +13,24 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  data() {
+    return {
+      currentTodo: ''
+    }
+  },
   computed: {
-    ...mapGetters({
-      todos: 'todos/TODOS'
-    })
+    todos() {
+      console.log('oi--')
+      return this.$store.getters['todos/TODOS']
+    }
   },
   mounted(){
     this.$store.dispatch('todos/feachTodos')
   },
   methods: {
-    addTodo (todo) {
-        this.$store.dispatch("todos/addTodo", todo)
+    addTodo () {
+        this.$store.dispatch("todos/addTodo", this.currentTodo)
+        this.currentTodo = ''
     },
     removeTodo (todo) {
       this.$store.dispatch("todos/removeTodo", todo)

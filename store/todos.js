@@ -3,18 +3,18 @@ export const state = () => ({
 })
 
 export const actions = {
-    addTodo({ commit }, todo) {
-        let data = this.$axios.$post('/items',{ description: todo.description })
-        .then(
-            commit("ADD_TODO", data)
-        )
+    addTodo({ commit }, description) {
+        this.$axios.$post('/items', {description: description })
+        .then(response => {
+            commit('ADD_TODO', response)
+        })
         .catch(error => {
             console.log(`Error at ADD_TODO - console error: ${error}`)
         })
      },
      removeTodo({ commit }, todo) {
         this.$axios.$delete(`items/${todo._id}`)
-        .then(response => {
+        .then(() => {
             commit('REMOVE_TODO', todo)
         })
         .catch(error => {
@@ -24,7 +24,7 @@ export const actions = {
     updateTodo({ commit }, todo) {
         this.$axios.$put(`/items/${todo._id}`, {description: todo.description, checked: !todo.checked})
         .then(response => {
-            commit("UPDATE_TODO", response)
+            commit("UPDATE_TODO", {OLD: todo, NEW: response})
         })
         .catch(error => {
             console.log(`Error at UPDATE_TODO - console error: ${error}`)
@@ -42,14 +42,12 @@ export const actions = {
 }
 
 export const getters =  {
-    TODOS : state => {
-      return state.todos;
-    },
+    TODOS: state => state.todos
 }
 
 export const mutations = {
-    UPDATE_TODO (state, todo) {
-        todo.done = !todo.done
+    UPDATE_TODO (state, response) {
+        state.todos.splice(state.todos.indexOf(response.OLD), 1, response.NEW)
     },  
     GET_TODOS(state, todos) {
         state.todos = todos
@@ -58,6 +56,6 @@ export const mutations = {
         state.todos.push(todo)
     },
     REMOVE_TODO(state, todo) {
-        state.todos.splice(state.list.indexOf(todo), 1)
+        state.todos.splice(state.todos.indexOf(todo), 1)
     }
 }
